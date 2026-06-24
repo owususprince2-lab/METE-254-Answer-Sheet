@@ -169,50 +169,9 @@
     .option-cell label:hover { border-color: var(--brown-mid); color: var(--brown-mid); background: rgba(123,74,45,0.08); }
     .option-cell input[type="radio"]:checked + label { border-color: var(--brown-mid); background: var(--brown-mid); color: #fff; box-shadow: 0 2px 12px rgba(123,74,45,0.30); }
 
-    /* WRITTEN QUESTION CARD */
-    .write-container {
-      max-width: 860px;
-      margin: 0 auto 20px;
-      background: var(--surface);
-      border: 1.5px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: var(--card-shadow);
-    }
-    .write-title {
-      padding: 16px 28px;
-      background: var(--brown-deep);
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.7);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .write-q-label { color: #f0c897; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
-    .write-body { padding: 22px 28px 28px; }
-    .write-prompt { font-size: 15px; color: var(--text); font-weight: 600; margin-bottom: 18px; line-height: 1.5; }
-    .write-prompt .marks { font-size: 12px; font-weight: 700; color: var(--accent-warm); background: rgba(194,118,58,0.12); border-radius: 6px; padding: 2px 8px; margin-left: 8px; }
-    .answer-boxes { display: flex; flex-direction: column; gap: 10px; }
-    .answer-box-row { display: flex; align-items: center; gap: 14px; }
-    .box-label { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; color: var(--brown-mid); width: 24px; flex-shrink: 0; }
-    .answer-box-input {
-      flex: 1;
-      background: var(--surface2);
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 16px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 15px;
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .answer-box-input:focus { border-color: var(--brown-mid); box-shadow: 0 0 0 3px rgba(123,74,45,0.12); }
-    .answer-box-input::placeholder { color: var(--muted); }
-    .answer-box-input.filled { background: rgba(74,124,89,0.06); border-color: rgba(74,124,89,0.35); }
+    /* QUESTION TEXT ROW (above each MCQ grid row) */
+    .qtext-row { padding: 10px 20px 0; font-size: 13.5px; color: var(--text-mid); line-height: 1.5; }
+    .qtext-row b { color: var(--brown-deep); font-family: 'JetBrains Mono', monospace; font-weight: 700; margin-right: 6px; }
 
     /* SUBMIT */
     .submit-area { max-width: 860px; margin: 24px auto 0; display: flex; gap: 16px; align-items: center; justify-content: flex-end; flex-wrap: wrap; }
@@ -250,8 +209,8 @@
       .group-grid { grid-template-columns: repeat(4, 1fr); }
       .prog-grid { grid-template-columns: 1fr; }
       .geo-card { padding: 36px 24px; }
-      .write-body { padding: 16px 16px 20px; }
       .sheet-header { padding: 16px 16px; }
+      .qtext-row { font-size: 13px; padding: 8px 10px 0; }
     }
   </style>
 </head>
@@ -273,7 +232,7 @@
     <div class="reg-header">
       <div class="reg-badge">METE 254 · Pre-Test</div>
       <div class="reg-title">Answer <span>Sheet</span></div>
-      <div class="reg-sub">Ore Beneficiation</div>
+      <div class="reg-sub">METE 254 — Particle Characterization &amp; Liberation</div>
     </div>
     <div id="geo-status-bar">
       <div class="geo-dot" id="geo-dot"></div>
@@ -281,7 +240,7 @@
     </div>
     <div class="info-box">
       <strong>⚠ Instructions</strong>
-      20 questions · 3 written + 17 MCQ · Timer starts on first answer · 8 min 40 sec total · Tab switch = −1.5 pts penalty · Must be on KNUST campus · Written questions: 1 min each · MCQ: 20 sec each
+      12 multiple-choice questions · Timer starts on first answer · 5 min total (20 sec/question, plus buffer) · Tab switch = −1.5 pts penalty · Must be on KNUST campus · Select one option (A–D) per question
     </div>
     <div class="field">
       <label>Full Name</label>
@@ -319,95 +278,23 @@
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;">
       <div class="timer-block">
         <div class="timer-label">Time Remaining</div>
-        <div id="timer-display">8:40</div>
+        <div id="timer-display">5:00</div>
       </div>
       <div class="timer-not-started" id="timer-hint">Starts on first answer</div>
       <div class="tab-warning" id="tab-warn">⚠ Tab switch detected</div>
     </div>
     <div style="font-size:12px;color:var(--muted);text-align:right;line-height:1.8;">
-      <div><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--brown-mid);" id="ans-count">0</span> / 20 answered</div>
-      <div style="font-family:'JetBrains Mono',monospace;">Written: 1 min · MCQ: 20 sec</div>
+      <div><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--brown-mid);" id="ans-count">0</span> / 12 answered</div>
+      <div style="font-family:'JetBrains Mono',monospace;">20 sec / question</div>
     </div>
   </div>
 
-  <!-- SECTION A: Written -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section A — Minerals &amp; Metals (Written)</div>
-
-  <!-- Q1: 4 metallic minerals -->
-  <div class="write-container">
-    <div class="write-title">
-      <span>Question 1 <span style="font-weight:400;color:rgba(255,255,255,0.5);font-size:12px;">· Written · 1 min suggested</span></span>
-      <span class="write-q-label">4 marks</span>
-    </div>
-    <div class="write-body">
-      <div class="write-prompt">List <strong>FOUR</strong> metallic minerals. <span class="marks">4 marks</span></div>
-      <div class="answer-boxes" id="write-boxes-1"></div>
-    </div>
-  </div>
-
-  <!-- Q2: 4 non-metallic minerals -->
-  <div class="write-container">
-    <div class="write-title">
-      <span>Question 2 <span style="font-weight:400;color:rgba(255,255,255,0.5);font-size:12px;">· Written · 1 min suggested</span></span>
-      <span class="write-q-label">4 marks</span>
-    </div>
-    <div class="write-body">
-      <div class="write-prompt">List <strong>FOUR</strong> non-metallic minerals. <span class="marks">4 marks</span></div>
-      <div class="answer-boxes" id="write-boxes-2"></div>
-    </div>
-  </div>
-
-  <!-- SECTION A MCQ (Q3–Q6) -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section A — Minerals &amp; Metals (MCQ)</div>
-  <div class="grid-container" id="mcq-sec-a">
-    <div class="grid-title"><span>Questions 3 – 6</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec each</span></div>
-    <div class="grid-header"><span>Q#</span><span>A</span><span>B</span><span>C</span><span>D</span></div>
-    <div id="grid-sec-a"></div>
-  </div>
-
-  <!-- SECTION B MCQ (Q7–Q8) -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section B — Uses of Non-Metallic Minerals (MCQ)</div>
-  <div class="grid-container">
-    <div class="grid-title"><span>Questions 7 – 8</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec each</span></div>
-    <div class="grid-header"><span>Q#</span><span>A</span><span>B</span><span>C</span><span>D</span></div>
-    <div id="grid-sec-b"></div>
-  </div>
-
-  <!-- SECTION C: Written Q9 + MCQ Q10 -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section C — Classification of Ores</div>
-
-  <!-- Q9: 3 classifications -->
-  <div class="write-container">
-    <div class="write-title">
-      <span>Question 9 <span style="font-weight:400;color:rgba(255,255,255,0.5);font-size:12px;">· Written · 1 min suggested</span></span>
-      <span class="write-q-label">3 marks</span>
-    </div>
-    <div class="write-body">
-      <div class="write-prompt">State the <strong>three</strong> classifications of ores. <span class="marks">3 marks</span></div>
-      <div class="answer-boxes" id="write-boxes-9"></div>
-    </div>
-  </div>
+  <div class="section-header">METE 254 — Particle Characterization &amp; Liberation (MCQ)</div>
 
   <div class="grid-container">
-    <div class="grid-title"><span>Question 10</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec</span></div>
+    <div class="grid-title"><span>Questions 1 – 12</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec each</span></div>
     <div class="grid-header"><span>Q#</span><span>A</span><span>B</span><span>C</span><span>D</span></div>
-    <div id="grid-sec-c"></div>
-  </div>
-
-  <!-- SECTION D MCQ (Q11–Q12) -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section D — Reduction &amp; Oxidation (MCQ)</div>
-  <div class="grid-container">
-    <div class="grid-title"><span>Questions 11 – 12</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec each</span></div>
-    <div class="grid-header"><span>Q#</span><span>A</span><span>B</span><span>C</span><span>D</span></div>
-    <div id="grid-sec-d"></div>
-  </div>
-
-  <!-- SECTION E MCQ (Q13–Q20) -->
-  <div class="section-header" style="max-width:860px;margin:0 auto 12px;">Section E — Economic Geology Terminology (MCQ)</div>
-  <div class="grid-container">
-    <div class="grid-title"><span>Questions 13 – 20</span><span style="font-size:12px;color:rgba(255,255,255,0.5);">20 sec each</span></div>
-    <div class="grid-header"><span>Q#</span><span>A</span><span>B</span><span>C</span><span>D</span></div>
-    <div id="grid-sec-e"></div>
+    <div id="grid-questions"></div>
   </div>
 
   <div class="submit-area">
@@ -423,7 +310,7 @@
     <div class="expect-header">
       <span class="expect-icon">💬</span>
       <div class="expect-title">One Last Thing</div>
-      <p class="expect-sub">Your answers have been recorded, <strong id="expect-name">—</strong>.<br/><br/>What do you hope to gain or learn from <strong>METE 254 Ore Beneficiation</strong> this semester?</p>
+      <p class="expect-sub">Your answers have been recorded, <strong id="expect-name">—</strong>.<br/><br/>What do you hope to gain or learn from <strong>METE 254</strong> this semester?</p>
     </div>
     <label class="expect-label" for="expect-textarea">Your Expectations</label>
     <textarea id="expect-textarea" placeholder="Share your thoughts freely — what topics interest you? What skills or knowledge are you hoping to walk away with?"></textarea>
@@ -447,85 +334,39 @@
 <script>
   const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzQ49ebOvpIuttMBXh7gkCRU857mK6T0Hr3v4yiEisPzHjwHdaPFyD744kWGVu81KymqA/exec";
 
-  // Time calculation:
-  // Written questions (Q1, Q2, Q9): 3 × 60s = 180s
-  // MCQ questions (Q3–Q8, Q10–Q20): 17 × 20s = 340s
-  // Total: 520 seconds = 8 min 40 sec
-  const TOTAL_TIME = 520;
+  // Total time: 5 minutes
+  const TOTAL_TIME = 300;
   const TAB_PENALTY = 1.5;
-  const TOTAL_Q = 20;
+  const TOTAL_Q = 12;
 
   const KNUST_LAT  =  6.6745;
   const KNUST_LNG  = -1.5716;
   const ALLOWED_RADIUS_M = 2000;
 
-  // Answer key for MCQ questions
+  // Question bank
+  const QUESTIONS = [
+    { q: 1,  text: "A beneficiation plant reports low recovery despite operating all separation units correctly. The most likely upstream cause is:", options: { A: "Over-screening", B: "Under-liberation", C: "Over-classification", D: "High density" } },
+    { q: 2,  text: "Which statement best explains why comminution and liberation are closely linked?", options: { A: "Both reduce moisture", B: "Both increase density", C: "One controls the other", D: "One precedes flotation" } },
+    { q: 3,  text: "Grinding an ore far beyond its liberation size will most likely:", options: { A: "Raise grade only", B: "Reduce gangue", C: "Increase cost", D: "Improve density" } },
+    { q: 4,  text: "A particle is considered liberated when it can be:", options: { A: "Measured", B: "Classified", C: "Separated", D: "Settled" } },
+    { q: 5,  text: "Partially liberated particles reporting to concentrate mainly cause:", options: { A: "Dilution", B: "Attrition", C: "Segregation", D: "Abrasion" } },
+    { q: 6,  text: "Which technique is most associated with automated liberation studies?", options: { A: "SEM", B: "Sieve", C: "Hydrocyclone", D: "Elutriator" } },
+    { q: 7,  text: "The equivalent diameter of an irregular particle is based primarily on:", options: { A: "Mass equality", B: "Shape similarity", C: "Similar behavior", D: "Surface equality" } },
+    { q: 8,  text: "Which particle property most influences frictional resistance?", options: { A: "Density", B: "Shape factor", C: "Specific gravity", D: "Porosity" } },
+    { q: 9,  text: "For a grinding product, the average diameter is commonly related to the size through which:", options: { A: "50% passes", B: "80% passes", C: "90% passes", D: "95% passes" } },
+    { q: 10, text: "Mesh number increases when:", options: { A: "Aperture increases", B: "Openings increase", C: "Density increases", D: "Thickness increases" } },
+    { q: 11, text: "Which method is best suited for bulk analysis of particles below 40 μm?", options: { A: "Hand sizing", B: "Sieve analysis", C: "Sedimentation", D: "Crushing" } },
+    { q: 12, text: "In a Tyler sieve series, consecutive sieve apertures differ by:", options: { A: "√2", B: "∜2", C: "10^(1/10)", D: "2" } }
+  ];
+
+  // Answer key
   const ANSWER_KEY = {
-    3:'C', 4:'B', 5:'A', 6:'B',
-    7:'D', 8:'C',
-    10:'C',
-    11:'A', 12:'C',
-    13:'B', 14:'C', 15:'A', 16:'B', 17:'C', 18:'B', 19:'C', 20:'C'
+    1:'B', 2:'C', 3:'C', 4:'C', 5:'A', 6:'A',
+    7:'C', 8:'B', 9:'D', 10:'B', 11:'C', 12:'A'
   };
-
-  // Written question answer keys (accepted answers — case-insensitive)
-  const WRITTEN_KEY = {
-    1: [
-      ['hematite','haematite'],
-      ['magnetite'],
-      ['bauxite'],
-      ['braunite'],
-      ['pyrolusite'],
-      ['chromite'],
-      ['galena'],
-      ['sphalerite'],
-      ['chalcopyrite'],
-      ['ilmenite'],
-      ['rutile'],
-      ['zircon'],
-      ['pitchblende'],
-      ['monazite']
-    ],
-    2: [
-      ['quartz'],
-      ['feldspar'],
-      ['gypsum'],
-      ['mica','muscovite'],
-      ['talc'],
-      ['kaolin','kaolinite','china clay'],
-      ['limestone'],
-      ['graphite'],
-      ['andalusite'],
-      ['apatite'],
-      ['chrysotile','asbestos'],
-      ['baryte','barite'],
-      ['bentonite'],
-      ['calcite'],
-      ['corundum'],
-      ['diamond'],
-      ['diaspore'],
-      ['dolomite'],
-      ['fluorite'],
-      ['garnet'],
-      ['kyanite'],
-      ['marble'],
-      ['magnesite'],
-      ['phosphate rock','phosphate'],
-      ['pyrite']
-    ],
-    9: [
-      ['ferrous ores','ferrous ore'],
-      ['non-ferrous ores','non-ferrous ore','nonferrous ores','nonferrous ore'],
-      ['ferrous alloys','ferrous alloy']
-    ]
-  };
-
-  // Which questions are written and how many boxes
-  const WRITTEN_BOXES = { 1: 4, 2: 4, 9: 3 };
 
   let studentName = '', indexNumber = '', groupNumber = '', programme = '';
   let mcqAnswers = {};
-  let writtenAnswers = { 1: {}, 2: {}, 9: {} };
   let timerInterval = null;
   let timeLeft = TOTAL_TIME;
   let timerStarted = false;
@@ -598,49 +439,23 @@
     }
   })();
 
-  /* Build written answer boxes */
-  function buildWriteBoxes(qNum, count) {
-    const container = document.getElementById(`write-boxes-${qNum}`);
-    if (!container) return;
-    container.innerHTML = '';
-    const labels = ['a','b','c','d','e','f'].slice(0, count);
-    labels.forEach(lbl => {
-      const row = document.createElement('div');
-      row.className = 'answer-box-row';
-      row.innerHTML = `
-        <div class="box-label">${lbl}.</div>
-        <input type="text" class="answer-box-input" placeholder="Write answer ${lbl} here…"
-          data-q="${qNum}" data-lbl="${lbl}"
-          oninput="recordWritten(this)"
-          autocomplete="off" spellcheck="false" />`;
-      container.appendChild(row);
-    });
-  }
-
-  function recordWritten(input) {
-    const q = parseInt(input.dataset.q);
-    const lbl = input.dataset.lbl;
-    writtenAnswers[q][lbl] = input.value.trim();
-    input.classList.toggle('filled', input.value.trim().length > 0);
-    recalcAnsweredCount();
-    triggerTimer();
-  }
-
   function recalcAnsweredCount() {
-    let count = Object.keys(mcqAnswers).length;
-    // Count written: a question counts if at least 1 box filled
-    [1,2,9].forEach(q => {
-      if (Object.values(writtenAnswers[q]).some(v => v.length > 0)) count++;
-    });
-    totalAnswered = count;
-    document.getElementById('ans-count').textContent = count;
+    totalAnswered = Object.keys(mcqAnswers).length;
+    document.getElementById('ans-count').textContent = totalAnswered;
   }
 
-  /* Build MCQ rows */
-  function buildMCQRows(containerId, qNums) {
+  /* Build MCQ rows with question text */
+  function buildMCQRows(containerId, questionList) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
-    qNums.forEach(q => {
+    questionList.forEach(item => {
+      const q = item.q;
+
+      const qtext = document.createElement('div');
+      qtext.className = 'qtext-row';
+      qtext.innerHTML = `<b>Q${q}.</b>${item.text}`;
+      container.appendChild(qtext);
+
       const row = document.createElement('div');
       row.className = 'question-row'; row.id = `row-${q}`;
       row.innerHTML = `<div class="q-num">${String(q).padStart(2,'0')}</div>` +
@@ -697,27 +512,6 @@
     }
   });
 
-  /* Score written answers — case insensitive, accept any valid answer per box */
-  function scoreWritten(qNum, boxAnswers) {
-    const key = WRITTEN_KEY[qNum];
-    if (!key) return 0;
-    const maxMarks = WRITTEN_BOXES[qNum];
-    const values = Object.values(boxAnswers).map(v => v.toLowerCase().trim()).filter(v => v.length > 0);
-    let score = 0;
-    const usedKeyIndices = new Set();
-    values.forEach(val => {
-      for (let ki = 0; ki < key.length; ki++) {
-        if (usedKeyIndices.has(ki)) continue;
-        if (key[ki].some(accepted => val === accepted.toLowerCase() || val.includes(accepted.toLowerCase()) || accepted.toLowerCase().includes(val))) {
-          score++;
-          usedKeyIndices.add(ki);
-          break;
-        }
-      }
-    });
-    return Math.min(score, maxMarks);
-  }
-
   /* Begin quiz */
   async function beginQuiz() {
     const nameEl = document.getElementById('reg-name');
@@ -754,17 +548,8 @@
     document.getElementById('disp-meta').textContent = `${indexNumber} · ${programme} · ${groupNumber}`;
     document.getElementById('thanks-name').textContent = studentName;
 
-    // Build written boxes
-    buildWriteBoxes(1, 4);
-    buildWriteBoxes(2, 4);
-    buildWriteBoxes(9, 3);
-
-    // Build MCQ grids
-    buildMCQRows('grid-sec-a', [3,4,5,6]);
-    buildMCQRows('grid-sec-b', [7,8]);
-    buildMCQRows('grid-sec-c', [10]);
-    buildMCQRows('grid-sec-d', [11,12]);
-    buildMCQRows('grid-sec-e', [13,14,15,16,17,18,19,20]);
+    // Build MCQ grid (all 12 questions)
+    buildMCQRows('grid-questions', QUESTIONS);
 
     document.getElementById('reg-page').style.display   = 'none';
     document.getElementById('sheet-page').style.display = 'block';
@@ -790,20 +575,11 @@
       if (ANSWER_KEY[q] && ans === ANSWER_KEY[q]) mcqRaw++;
     }
 
-    // Score written
-    const w1Score = scoreWritten(1, writtenAnswers[1]);
-    const w2Score = scoreWritten(2, writtenAnswers[2]);
-    const w9Score = scoreWritten(9, writtenAnswers[9]);
-    const writtenRaw = w1Score + w2Score + w9Score;
-    const rawScore = mcqRaw + writtenRaw;
+    const rawScore = mcqRaw;
     const finalScore = Math.max(0, rawScore - tabDeduction);
 
-    // Serialize written answers
-    const w1Str = Object.entries(writtenAnswers[1]).map(([k,v])=>`${k}:${v||'-'}`).join('|');
-    const w2Str = Object.entries(writtenAnswers[2]).map(([k,v])=>`${k}:${v||'-'}`).join('|');
-    const w9Str = Object.entries(writtenAnswers[9]).map(([k,v])=>`${k}:${v||'-'}`).join('|');
-    const mcqStr = Array.from({length:17}, (_,i) => {
-      const q = [3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,19,20][i];
+    const mcqStr = Array.from({length:TOTAL_Q}, (_,i) => {
+      const q = i + 1;
       return `Q${q}=${mcqAnswers[q]||'-'}`;
     }).join(',');
 
@@ -811,9 +587,7 @@
       sheet: 'Sheet1',
       studentName, indexNumber, groupNumber, programme,
       mcqAnswers: mcqStr,
-      writtenQ1: w1Str, writtenQ2: w2Str, writtenQ9: w9Str,
-      writtenScoreQ1: w1Score, writtenScoreQ2: w2Score, writtenScoreQ9: w9Score,
-      mcqRaw, writtenRaw, rawScore,
+      mcqRaw, rawScore,
       tabSwitches, tabDeduction: tabDeduction.toFixed(1),
       finalScore: finalScore.toFixed(1),
       timeUsedSeconds: timeUsed,
